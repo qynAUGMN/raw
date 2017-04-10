@@ -1,0 +1,22 @@
+{
+  "name": "edv",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prod": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qynAUGMN/raw.git"
+  },
+  "author": "yan.qi02",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/qynAUGMN/raw/issues"
+  },
+  "homepage": "https://github.com/qynAUGMN/raw#readme",
+  "devDependencies": {
+    "webpack": "^2.3.3"
+  }
+}
