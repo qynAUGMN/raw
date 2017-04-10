@@ -5,7 +5,7 @@
     tree.dimensions().remove('size');
     tree.dimensions().remove('color');
     tree.dimensions().remove('label');
-
+return; // edv
     var chart = raw.chart()
         .title('Cluster Dendrogram')
         .description(

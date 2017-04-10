@@ -5,7 +5,7 @@
 	points.dimensions().remove('size');
 	points.dimensions().remove('label');
 	points.dimensions().remove('color');
-
+return; // edv
 	var chart = raw.chart()
 		.title('Delaunay Triangulation')
 		.description(

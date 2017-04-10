@@ -29,7 +29,7 @@
         return nest;
 
     })
-
+return; // edv
     var chart = raw.chart()
         .model(model)
         .title('Horizon graph')

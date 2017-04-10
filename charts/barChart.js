@@ -1,5 +1,6 @@
-(function() {
+var raw = require('../lib/raw').raw;
 
+(function() {
 	// A multiple bar chart
 
 	// The Model
@@ -75,7 +76,7 @@
 
 	var chart = raw.chart()
 		.title("Bar chart")
-		.description("A bar chart or bar graph is a chart or graph that presents grouped data with rectangular bars with heights proportional to the values that they represent.</br> Chart based on <a href='https://bl.ocks.org/mbostock/3310560'>https://bl.ocks.org/mbostock/3310560</a>")
+		.description("条形图是一个图表或图形，它显示具有矩形条的分组数据，其高度与它们表示的值成比例.</br> Based on <a href='https://bl.ocks.org/mbostock/3310560'>https://bl.ocks.org/mbostock/3310560</a>")
 		.thumbnail("imgs/barChart.png")
 		.category('Other')
 		.model(model)

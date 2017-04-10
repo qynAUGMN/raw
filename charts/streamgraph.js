@@ -52,7 +52,7 @@
         return d3.values(groups).map(function(d){ return d.sort(function(a,b){ return a.x - b.x; }) });
 
     })
-
+return; // edv
     var chart = raw.chart()
         .title('Streamgraph')
         .thumbnail("imgs/streamgraph.png")

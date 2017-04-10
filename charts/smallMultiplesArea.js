@@ -1,5 +1,6 @@
-(function(){
+var raw = require('../lib/raw').raw;
 
+(function(){
     var stream = raw.model();
 
     var group = stream.dimension()
@@ -48,7 +49,7 @@
     var chart = raw.chart()
         .title('Area graph')
         .thumbnail("imgs/smallMultiples.png")
-        .description("A small multiple is a series of small similar graphics or charts, allowing them to be easily compared.<br/>Based on <a href='http://bl.ocks.org/mbostock/9490313'>http://bl.ocks.org/mbostock/9490313</a>")
+        .description("一个小的复数是一系列小的相似的图形或图表，允许他们轻松比较.<br/>Based on <a href='http://bl.ocks.org/mbostock/9490313'>http://bl.ocks.org/mbostock/9490313</a>")
         .category('Time series')
         .model(stream)
 
@@ -101,8 +102,6 @@
         }
         
         data.sort(sortBy);
-        
-        console.log(data);
         
         var curves = {
             'Basis spline' : 'basis',

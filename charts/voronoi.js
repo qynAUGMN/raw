@@ -4,7 +4,7 @@
 
 	points.dimensions().remove('size');
 	points.dimensions().remove('label');
-
+return; // edv
 	var chart = raw.chart()
 		.title('Voronoi Tessellation')
 		.description(

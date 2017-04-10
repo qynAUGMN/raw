@@ -1,3 +1,5 @@
+var raw = require('../lib/raw').raw;
+
 (function(){
 
 	var points = raw.models.points();
@@ -5,15 +7,15 @@
 	var chart = raw.chart()
 		.title('Scatter Plot')
 		.description(
-            "A scatter plot, scatterplot, or scattergraph is a type of mathematical diagram using Cartesian coordinates to display values for two variables for a set of data. The data is displayed as a collection of points, each having the value of one variable determining the position on the horizontal axis and the value of the other variable determining the position on the vertical axis. This kind of plot is also called a scatter chart, scattergram, scatter diagram, or scatter graph.")
+            "散点图是一种使用笛卡尔坐标显示一组数据的两个变量值的数学图. 数据显示为点的集合, 每个具有确定水平轴上的位置的一个变量的值和确定垂直轴上的位置的另一个变量的值.")
 		.thumbnail("imgs/scatterPlot.png")
 	    .category('Dispersion')
 		.model(points)
 
 	var width = chart.number()
 		.title("Width")
-		.defaultValue(1000)
-		.fitToWidth(true)
+		.defaultValue(( $('.container').width() - 40 ) * .75)
+		.fitToWidth(false)
 
 	var height = chart.number()
 		.title("Height")

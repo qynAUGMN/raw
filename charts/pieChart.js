@@ -1,3 +1,5 @@
+var raw = require('../lib/raw').raw;
+
 ! function() {
 
   var model = raw.model();
@@ -47,7 +49,7 @@
 
   var chart = raw.chart()
     .title("Pie chart")
-    .description("A pie chart (or a circle chart) is a circular statistical graphic which is divided into slices to illustrate numerical proportion.")
+    .description("饼图（或圆形图）是圆形统计图形，分为切片以说明数字比例.")
     .thumbnail("imgs/pieChart.png")
     .category('Other')
     .model(model);

@@ -1,5 +1,6 @@
-(function(){
+var raw = require('../lib/raw').raw;
 
+(function() {
     var sequence = raw.model();
 
     var group = sequence.dimension()
@@ -22,7 +23,7 @@
         .title('Color')
         .types(String, Date, Number)
 
-    sequence.map(function (data){
+    sequence.map(function (data) {
 			var level = id = 0;
 
 			return d3.nest()
@@ -66,14 +67,14 @@
     var chart = raw.chart()
         .title('Gantt Chart')
 				.thumbnail("imgs/gantt.png")
-				.description("A Gantt chart is a type of bar chart, developed by Henry Gantt in the 1910s, that illustrates a project schedule. Gantt charts illustrate the start and finish dates of the terminal elements and summary elements of a project.")
+				.description("甘特图是一种由亨利·甘特在19世纪10年代开发的条形图，说明了一个项目进度. 甘特图说明了项目的终端元素和摘要元素的开始和结束日期.")
         .category('Time chunks')
         .model(sequence)
 
     var width = chart.number()
         .title("Width")
-        .defaultValue(1000)
-        .fitToWidth(true)
+        .defaultValue(( $('.container').width() - 40 ) * .75)
+        .fitToWidth(false)
 
     var height = chart.number()
         .title("Height")
@@ -87,11 +88,11 @@
     var colors = chart.color()
         .title("Color scale")
 
-    chart.draw(function (selection, data){
+    chart.draw(function (selection, data) {
 
         var g = selection
-            .attr("width", +width() )
-            .attr("height", +height() )
+            .attr("width", + width() )
+            .attr("height", + height() )
             .append("g")
 
         var groups = data,
@@ -156,7 +157,13 @@
 				  .attr('width', function(d) { return d3.max([1,x(d.end) - x(d.start)]); })
 			    .attr('height', itemHeight)
 			    .style("shape-rendering","crispEdges")
-			    .style('fill',function(d){ return colors()(d.color); })
+			    .style('fill',function(d){
+			    	try {
+			    		return colors()(d.color); 
+			    	} catch (e) {
+			    		// console.log(e);
+			    	}
+			    })
 
 				g.append('g')
 				  	.attr('transform', 'translate(0,' + (margin.top + itemHeight * levels) + ')')
