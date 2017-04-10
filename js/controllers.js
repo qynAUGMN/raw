@@ -2,11 +2,25 @@
 
 /* Controllers */
 
+var raw = require('../lib/raw').raw;
+
 angular.module('raw.controllers', [])
 
-  .controller('RawCtrl', function ($scope, dataService, $http, $timeout) {
+  .controller('RawCtrl', function ($rootScope, $scope, dataService, $http, $timeout, $location) {
 
     $scope.loading = false;
+    $scope.nowTab = 1;
+
+    $scope.codeMirrorOptions = {
+      dragDrop : false,
+      lineNumbers : true,
+      lineWrapping : true
+    }
+
+    // Tab Switch
+    $scope.setStep = function(num) {
+      $scope.nowTab = num || 1;
+    }
 
     // Clipboard
     $scope.$watch('clipboardText', function (text) {
@@ -94,11 +108,12 @@ angular.module('raw.controllers', [])
             parseText(text);
           })
         }
+
       }
+
     };
 
-
-    function parseData(json){
+    function parseData(json) {
 
       $scope.loading = false;
     //  $scope.parsed = true;
@@ -138,17 +153,18 @@ angular.module('raw.controllers', [])
       .error(function(data, status, headers, config) {
         console.log(data,status,headers)
 
-        $http.get(url, {responseType:'arraybuffer'})
-        .success(function(arraybuffer, status, headers, config) {
-          console.log(arraybuffer,status,headers)
+        $http.get(url, {responseType:'json'})
+        .success(function(res, status, headers, config) {
+          /* console.log(arraybuffer,status,headers)
 
-          var data = new Uint8Array(arraybuffer);
+          var data = new Uint8Array(arraybuffer);console.log(data)
           var arr = new Array();
           for(var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);
-          var bstr = arr.join("");
+          var bstr = arr.join("");*/
+          var bstr = JSON.stringify(res);
 
           try {
-            var workbook = XLS.read(bstr, {type:"binary"});
+            var workbook = XLS.read(bstr, {type: "binary"});
             var worksheets = [];
 						var sheet_name_list = workbook.SheetNames;
 
@@ -191,24 +207,39 @@ angular.module('raw.controllers', [])
 
       });
 
-
-
-
     });
 
 
     $scope.samples = [
-      { title : 'Biggest cities per continent', type : 'Distributions', url : 'data/cities.csv'},
+      // { title : 'Biggest cities per continent', type : 'Distributions', url : 'data/cities.csv'},
       { title : 'Countries GDP', type : 'Other', url : 'data/countriesGDP.csv'},
       { title : 'Cars', type : 'Multivariate', url : 'data/multivariate.csv' },
       { title : 'Movies', type : 'Dispersions', url : 'data/dispersions.csv' },
       { title : 'Music industry', type: 'Time Series', url : 'data/music.csv' },
       { title : 'Lineup', type : 'Time chunks', url : 'data/lineup.tsv' },
-      { title : 'Orchestras', type : 'Hierarchies (weighted)', url : 'data/orchestra.csv' },
-      { title : 'Animal kingdom', type: 'Hierarchies', url : 'data/animals.tsv' },
-      { title : 'Titanic\'s passengers', type : 'Multi categorical', url : 'data/titanic.tsv' },
-      { title : 'Most frequent letters', type: 'Matrix (narrow)', url:'data/letters.tsv'}
+      // { title : 'Orchestras', type : 'Hierarchies (weighted)', url : 'data/orchestra.csv' },
+      // { title : 'Animal kingdom', type: 'Hierarchies', url : 'data/animals.tsv' },
+      // { title : 'Titanic\'s passengers', type : 'Multi categorical', url : 'data/titanic.tsv' },
+      // { title : 'Most frequent letters', type: 'Matrix (narrow)', url:'data/letters.tsv'}
     ]
+
+    $scope.selectGraph = function(data) {
+      if (!data) return;
+      $scope.text = data.chart_text;
+      $scope.chartName = data.chart_name;
+      $scope.dimensionLabel = data.dimension_label;
+      $scope.nowTab = 1;
+    };
+
+    $scope.deleteGraph = function(graphId, $event) {
+      $event.stopPropagation();
+      dataService.delGraph(graphId)
+      .then(function(res) {
+        if (res.code === 200) {
+          $scope.graphs = $scope.graphs.filter(function(d){return d._id !== graphId});
+        }
+      });
+    };
 
     $scope.selectSample = function(sample) {
 
@@ -233,7 +264,7 @@ angular.module('raw.controllers', [])
       $scope.$digest();
     });
 
-    $scope.$watch('dataView', function (n,o){
+    $scope.$watch('dataView', function (n, o) {
       if (!$('.parsed .CodeMirror')[0]) return;
       var cm = $('.parsed .CodeMirror')[0].CodeMirror;
       $timeout(function() { cm.refresh()});
@@ -257,7 +288,6 @@ angular.module('raw.controllers', [])
       'Correlations': '#df0',
       'Others': '#0f0'
     }
-
 
     $scope.$watch('files', function () {
       $scope.uploadFile($scope.files);
@@ -287,7 +317,7 @@ angular.module('raw.controllers', [])
 
     var arrays = [];
 
-    $scope.unstack = function(){
+    $scope.unstack = function() {
       if (!$scope.stackDimension) return;
       var data = $scope.data;
       var base = $scope.stackDimension.key;
@@ -316,7 +346,6 @@ angular.module('raw.controllers', [])
       $scope.unstacked = false;
     }
 
-
     function jsonTree(json){
       // mettere try
       var tree = JSON.parse(json);
@@ -325,7 +354,6 @@ angular.module('raw.controllers', [])
       //console.log(JSON.parse(json));
       expand(tree);
     }
-
 
     function expand(parent){
       for (var child in parent) {
@@ -336,7 +364,6 @@ angular.module('raw.controllers', [])
       }
       //console.log(child,parent[child])
     }
-
 
     // very improbable function to determine if pivot table or not.
     // pivotable index
@@ -361,23 +388,19 @@ angular.module('raw.controllers', [])
           for (var ra in rows) {
             if (r == ra) break;
         //    if (p == "") break;
-            if (rows[ra].hasOwnProperty(p)) rows[r][p]-=2.5;
+            if (rows[ra].hasOwnProperty(p)) rows[r][p] -= 2.5;
 
           }
         }
       }
 
-      var m = d3.values(rows).map(d3.values).map(function(d){ return d3.sum(d)/n; });
+      var m = d3.values(rows).map(d3.values).map(function(d){ return d3.sum(d) / n; });
       //console.log(d3.mean(m),m)
       $scope.pivot = d3.mean(m);
 
     }
 
-
-
-
-    $scope.parse = function(text){
-
+    $scope.parse = function(text) {
       if ($scope.model) $scope.model.clear();
 
       $scope.text = text;
@@ -396,12 +419,11 @@ angular.module('raw.controllers', [])
         $scope.error = false;
         pivotable($scope.data);
         $scope.parsed = true;
-
-
-      } catch(e){
+        $scope.resetSetting();
+      } catch(e) {
         $scope.data = [];
         $scope.metadata = [];
-        $scope.error = e.name == "ParseError" ? +e.message : false;
+        $scope.error = e.name === "ParseError" ? + e.message : false;
       }
       if (!$scope.data.length && $scope.model) $scope.model.clear();
       $scope.loading = false;
@@ -411,7 +433,37 @@ angular.module('raw.controllers', [])
 
     $scope.delayParse = dataService.debounce($scope.parse, 500, false);
 
-    $scope.$watch("text", function (text){
+    dataService.loadUser()
+    .then(function(data) {
+      $rootScope.user = data;
+    });
+
+    dataService.myGraph()
+    .then(function(res) {
+      if (res.code === 200) {
+        $scope.graphs = res.data;
+      }
+    });
+
+    var graphId = $location.search().graphId;
+
+    if (graphId) {
+      dataService.getGraphById(graphId)
+      .then(function(res) {
+        if (res.code === 200) {
+          $scope.chartName = res.data.chart_name;
+          $scope.dimensionLabel = res.data.dimension_label;
+          try {
+            $scope.parse(res.data.chart_text);
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      });
+    }
+    // console.log(grapgId)
+
+    $scope.$watch("text", function (text) {
       if (!text) return;
       $scope.loading = true;
       $scope.delayParse(text);
@@ -421,7 +473,7 @@ angular.module('raw.controllers', [])
     $scope.chart = $scope.charts.filter(function(d){return d.title() == 'Scatter Plot'})[0];
     $scope.model = $scope.chart ? $scope.chart.model() : null;
 
-    $scope.$watch('error', function (error){
+    $scope.$watch('error', function (error) {
       if (!$('.parsed .CodeMirror')[0]) return;
       var cm = $('.parsed .CodeMirror')[0].CodeMirror;
       if (!error) {
@@ -433,34 +485,56 @@ angular.module('raw.controllers', [])
       $scope.lastError = error;
     })
 
-    $('body').mousedown(function (e,ui){
+    $('body').mousedown(function (e, ui) {
       if ($(e.target).hasClass("dimension-info-toggle")) return;
-      $('.dimensions-wrapper').each(function (e){
+      $('.dimensions-wrapper').each(function (e) {
         angular.element(this).scope().open = false;
         angular.element(this).scope().$apply();
       })
-    })
+    });
 
-    $scope.codeMirrorOptions = {
-      dragDrop : false,
-      lineNumbers : true,
-      lineWrapping : true
-    }
+    $scope.resetSetting = function() {
+      if ($scope.chartName) {
+        $scope.chart = $scope.charts.filter(function(d){return d.title() == $scope.chartName})[0];
+      }
+      if (!$scope.dimensionLabel) return;
+      $scope.model.clear();
+      $scope.model = $scope.chart ? $scope.chart.model() : null;
 
-    $scope.selectChart = function(chart){
+      const dimensionLabelOrigin = JSON.parse($scope.dimensionLabel);
+      dimensionLabelOrigin.forEach(function(d, index) {
+        $scope.model.dimensions().forEach(function(label, dimension) {
+          if (label === d.name) {
+            if (d.key && d.type) {
+              dimension.set(index, [{
+                key: d.key,
+                type: d.type
+              }]);
+            }
+          }
+        });
+      });
+      
+      // console.log($scope.model.dimensions())
+
+      $scope.dimensionLabels = dimensionLabelOrigin;
+    };
+
+    $scope.selectChart = function(chart) {
       if (chart == $scope.chart) return;
       $scope.model.clear();
       $scope.chart = chart;
       $scope.model = $scope.chart.model();
+      console.log($scope.chart.title());
     }
 
-    function refreshScroll(){
+    function refreshScroll() {
       $('[data-spy="scroll"]').each(function () {
         $(this).scrollspy('refresh');
       });
     }
 
-    $(window).scroll(function(){
+    $(window).scroll(function() {
 
       // check for mobile
       if ($(window).width() < 760 || $('#mapping').height() < 300) return;
@@ -472,7 +546,7 @@ angular.module('raw.controllers', [])
           isOver = scrollTop > mappingTop + mappingHeight - $(".sticky").height() - 20,
           mappingWidth = mappingWidth ? mappingWidth : $('.mapping').width();
 
-      if (mappingHeight-$('.dimensions-list').height() > 90) return;
+      if (mappingHeight - $('.dimensions-list').height() > 90) return;
       //console.log(mappingHeight-$('.dimensions-list').height())
       if (isBetween) {
         $(".sticky")
@@ -498,12 +572,37 @@ angular.module('raw.controllers', [])
 
     })
 
-      $scope.sortCategory = function (chart) {
-        // sort first by category, then by title
-        return [chart.category(),chart.title()];
-      };
+    $scope.sortCategory = function (chart) {
+      // sort first by category, then by title
+      return [chart.category(),chart.title()];
+    };
+
+    $scope.submit = function(image) {
+      let graphData = {
+        title: $scope.chart.title(),
+        text: $scope.text,
+        dimensionLabels: JSON.stringify($scope.dimensionLabels),
+        mode: $scope.mode.label,
+        fileName: $scope.fileName,
+        emailRange: $scope.emailRange.value,
+        detailRange: $scope.detailRange ? $scope.detailRange.value : null,
+        emailTime: $scope.emailTime,
+        emailSubject: $scope.emailSubject,
+        emailReceiver: $scope.emailReceiver
+      }
+      dataService.upLoadImage(image)
+      .then(function(data) {
+        graphData.imageUrl = data.imageUrl;
+        dataService.saveGraph(graphData)
+        .then(function(data) {
+          if (data.code === 200) {
+            alert('保存成功');
+            location.reload();
+          };
+        });
+      });
+    };
 
     $(document).ready(refreshScroll);
-
 
   })
