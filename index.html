@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Karla:400,400italic,700,700italic|Roboto:400,700italic,900italic,500italic,400italic,100italic,300italic,900,700,500,300,100|Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,800,700|Chivo:400,900,400italic,900italic|Pacifico|Dancing+Script:400,700|Cousine:400,700|Arimo:300,400,300italic,400italic,700|Nunito:400,300,700|Oxygen:400,700,300|Lato:100,200,400,700,900&subset=latin,latin-ext"/>
 
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" type="text/css" href="bower_components/angular-ui-notification/dist/angular-ui-notification.css">
   <link rel="stylesheet" type="text/css" href="bower_components/angular-bootstrap-colorpicker/css/colorpicker.css">
   <link href="http://netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="bower_components/codemirror/lib/codemirror.css">
@@ -38,14 +39,22 @@
         </a>
       </div>
 
-      <nav class="collapse navbar-collapse" role="navigation" id="raw-navbar">
+      <div class="btn-group pull-right user-name">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{user.name}} <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a href="http://dev.elenet.me:8100/api/logout">退出</a></li>
+        </ul>
+      </div>
+
+      <!--nav class="collapse navbar-collapse" role="navigation" id="raw-navbar">
         <ul class="nav navbar-nav navbar-right">
           <li>Eleme&nbsp;</li>
           <li>Data&nbsp;</li>
           <li>Visualization&nbsp;</li>
-          <li><a href="https://github.com/qynAUGMN/raw" style="font-size:23px"><i class="fa fa-github"></i></a></li>
         </ul>
-      </nav>
+      </nav-->
 
       <!--<span class="pull-left">The missing link between spreadsheets and vector graphics</span class="pull-left">-->
 
@@ -53,6 +62,8 @@
   </header>
 
   <div ng-view class="wrap"></div>
+
+  <span class="graph-url">1234</span>
 
   <div id="footer">
     <div class="container">
@@ -72,6 +83,7 @@
   </div>
 
   <!-- jquery -->
+  <!--script src="//fe-static.ele.me/github/jquery/jquery-dist/2.2.0/dist/jquery.min.js"></script-->
   <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
   <script type="text/javascript" src="bower_components/jquery-ui/ui/minified/jquery-ui.min.js"></script>
   <script type="text/javascript" src="bower_components/jqueryui-touch-punch/jquery.ui.touch-punch.min.js"></script>
@@ -97,7 +109,7 @@
   <script type="text/javascript" src="lib/raw.js"></script>
 
   <!-- charts -->
-  <script src="charts/treemap.js"></script>
+  <!--script src="charts/treemap.js"></script>
   <script src="charts/streamgraph.js"></script>
   <script src="charts/scatterPlot.js"></script>
   <script src="charts/packing.js"></script>
@@ -117,9 +129,11 @@
   <script src="charts/horizon.js"></script>
   <script src="charts/boxPlot.js"></script>
   <script src="charts/barChart.js"></script>
-  <script src="charts/pieChart.js"></script>
+  <script src="charts/pieChart.js"></script-->
 
   <!-- angular -->
+  <!--script src="//fe-static.ele.me/github/angular/bower-angular/v1.4.8/angular.min.js"></script>
+  <script src="//fe-static.ele.me/github/angular/bower-angular-route/v1.4.8/angular-route.min.js"></script-->
   <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
   <script type="text/javascript" src="bower_components/angular-route/angular-route.min.js"></script>
   <script type="text/javascript" src="bower_components/angular-animate/angular-animate.min.js"></script>
@@ -128,17 +142,18 @@
   <script type="text/javascript" src="bower_components/angular-strap/dist/angular-strap.tpl.min.js"></script>
   <script type="text/javascript" src="bower_components/angular-ui/build/angular-ui.js"></script>
   <script type="text/javascript" src="bower_components/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js"></script>
+  <script type="text/javascript" src="bower_components/angular-ui-notification/dist/angular-ui-notification.js"></script>
   <script type="text/javascript" src="bower_components/ng-file-upload/ng-file-upload-shim.min.js"></script>
   <script type="text/javascript" src="bower_components/ng-file-upload/ng-file-upload.min.js"></script>
   <script type="text/javascript" src="bower_components/is_js/is.min.js"></script>
   <script type="text/javascript" src="bower_components/js-xlsx/dist/xlsx.full.min.js"></script>
 
-
-  <script src="js/app.js"></script>
+  <script src="build/bundle.js"></script>
+  <!--script src="js/app.js"></script>
   <script src="js/services.js"></script>
   <script src="js/controllers.js"></script>
   <script src="js/filters.js"></script>
-  <script src="js/directives.js"></script>
+  <script src="js/directives.js"></script-->
 
 </body>
 </html>
